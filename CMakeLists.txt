@@ -45,22 +45,22 @@ include_directories(${EXTERNAL_INSTALL_LOCATION}/src/vcl
     ${PROJECT_SOURCE_DIR}/src
 )
 
-# set(CMAKE_CXX_COMPILER "clang++")
-# set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++20 -I/usr/local/include -march=native -mavx2 -mfma -O3")
-# add_executable(cascaded_sos test/cascaded_sos.cpp)
-# add_executable(cascaded_sos_unlimited test/cascaded_sos_unlimited.cpp)
-# add_executable(filter_test test/filter_test.cpp)
-# add_executable(single_sos_unlimited test/single_sos_unlimited.cpp)
-# add_executable(varying_inter_block test/varying_inter_block.cpp)
-# add_executable(filter example/filter.cpp)
+set(CMAKE_CXX_COMPILER "clang++")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++20 -I/usr/local/include -march=native -mavx2 -mfma -ltbb -O3")
+add_executable(cascaded_sos test/cascaded_sos.cpp)
+add_executable(cascaded_sos_unlimited test/cascaded_sos_unlimited.cpp)
+add_executable(filter_test test/filter_test.cpp)
+add_executable(single_sos_unlimited test/single_sos_unlimited.cpp)
+add_executable(varying_inter_block test/varying_inter_block.cpp)
+add_executable(filter example/filter.cpp)
 
-# add_test(NAME cascaded_sos COMMAND cascaded_sos)
-# add_test(NAME cascaded_sos_unlimited COMMAND cascaded_sos_unlimited)
-# add_test(NAME filter_test COMMAND filter_test)
-# add_test(NAME single_sos_unlimited COMMAND single_sos_unlimited)
-# add_test(NAME varying_inter_block COMMAND varying_inter_block)
+add_test(NAME cascaded_sos COMMAND cascaded_sos)
+add_test(NAME cascaded_sos_unlimited COMMAND cascaded_sos_unlimited)
+add_test(NAME filter_test COMMAND filter_test)
+add_test(NAME single_sos_unlimited COMMAND single_sos_unlimited)
+add_test(NAME varying_inter_block COMMAND varying_inter_block)
 
-# enable_testing()
+enable_testing()
 
 # Install
 install(TARGETS ${PROJECT_NAME}
