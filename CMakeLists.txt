@@ -22,17 +22,18 @@ set(EXTERNAL_INSTALL_LOCATION ${CMAKE_BINARY_DIR}/external)
 
 ExternalProject_Add(vcl
     GIT_REPOSITORY https://github.com/vectorclass/version2.git
-    PREFIX external/vcl
+    PREFIX ${EXTERNAL_INSTALL_LOCATION}/vcl
     CONFIGURE_COMMAND ""
     BUILD_COMMAND ""
     INSTALL_COMMAND ""
+    UPDATE_DISCONNECTED 1
 )
 
 # Find TBB
 find_package(TBB REQUIRED)
 
 include_directories(
-    ${EXTERNAL_INSTALL_LOCATION}/src/vcl
+    ${EXTERNAL_INSTALL_LOCATION}/vcl/src/vcl
     ${TBB_INCLUDE_DIRS}
     ${PROJECT_SOURCE_DIR}/include
     ${PROJECT_SOURCE_DIR}/src
@@ -49,7 +50,14 @@ add_executable(single_sos_unlimited test/single_sos_unlimited.cpp)
 add_executable(varying_inter_block test/varying_inter_block.cpp)
 add_executable(filter example/filter.cpp)
 
-# Link TBB to executables
+# Add dependencies and link TBB to executables
+add_dependencies(cascaded_sos vcl)
+add_dependencies(cascaded_sos_unlimited vcl)
+add_dependencies(filter_test vcl)
+add_dependencies(single_sos_unlimited vcl)
+add_dependencies(varying_inter_block vcl)
+add_dependencies(filter vcl)
+
 target_link_libraries(cascaded_sos PRIVATE TBB::tbb)
 target_link_libraries(cascaded_sos_unlimited PRIVATE TBB::tbb)
 target_link_libraries(filter_test PRIVATE TBB::tbb)
