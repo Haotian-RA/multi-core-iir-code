@@ -47,7 +47,7 @@ include_directories(${EXTERNAL_INSTALL_LOCATION}/src/vcl
 
 set(TBB_LIBRARY_RELEASE ${EXTERNAL_INSTALL_LOCATION}/oneTBB/src/oneTBB/build/linux_intel64_gcc_cc9_libc2.31_kernel5.4.0_release)
 set(CMAKE_CXX_COMPILER "clang++")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++20 -I/usr/local/include -march=native -mavx2 -mfma -Wl,-rpath,$TBB_LIBRARY_RELEASE -L$TBB_LIBRARY_RELEASE -ltbb -O3")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++20 -I/usr/local/include -march=native -mavx2 -mfma -Wl,-rpath,${TBB_LIBRARY_RELEASE} -L${TBB_LIBRARY_RELEASE} -ltbb -O3")
 add_executable(cascaded_sos test/cascaded_sos.cpp)
 add_executable(cascaded_sos_unlimited test/cascaded_sos_unlimited.cpp)
 add_executable(filter_test test/filter_test.cpp)
