@@ -29,8 +29,11 @@ ExternalProject_Add(vcl
     UPDATE_DISCONNECTED 1
 )
 
-# Include TBB directories
+# Set TBB directories
 set(TBB_DIR ${CMAKE_SOURCE_DIR}/external/oneTBB-2019)
+
+# Verify TBB_DIR is set correctly
+message(STATUS "TBB_DIR is set to: ${TBB_DIR}")
 
 include_directories(
     ${EXTERNAL_INSTALL_LOCATION}/vcl/src/vcl
@@ -39,10 +42,16 @@ include_directories(
     ${PROJECT_SOURCE_DIR}/src
 )
 
+# Verify include directories are set correctly
+message(STATUS "Include directories: ${CMAKE_CXX_INCLUDE_DIRECTORIES}")
+
 # Link TBB libraries
 link_directories(
     ${TBB_DIR}/build/linux_intel64_gcc_cc9_libc2.28_kernel4.15.0_release
 )
+
+# Verify link directories are set correctly
+message(STATUS "Link directories: ${CMAKE_LIBRARY_PATH}")
 
 set(CMAKE_CXX_COMPILER "clang++")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++20 -I/usr/local/include -march=native -mavx2 -mfma -O3")
