@@ -28,17 +28,12 @@ ExternalProject_Add(vcl
     INSTALL_COMMAND ""
 )
 
-ExternalProject_Add(tbb
-    GIT_REPOSITORY https://github.com/oneapi-src/oneTBB.git
-    PREFIX external/tbb
-    CONFIGURE_COMMAND ""
-    BUILD_COMMAND make
-    INSTALL_COMMAND ""
-)
+# Find TBB
+find_package(TBB REQUIRED)
 
 include_directories(
     ${EXTERNAL_INSTALL_LOCATION}/src/vcl
-    ${EXTERNAL_INSTALL_LOCATION}/src/tbb/include
+    ${TBB_INCLUDE_DIRS}
     ${PROJECT_SOURCE_DIR}/include
     ${PROJECT_SOURCE_DIR}/src
 )
@@ -54,20 +49,13 @@ add_executable(single_sos_unlimited test/single_sos_unlimited.cpp)
 add_executable(varying_inter_block test/varying_inter_block.cpp)
 add_executable(filter example/filter.cpp)
 
-# Add dependencies and link TBB to executables
-add_dependencies(cascaded_sos tbb)
-add_dependencies(cascaded_sos_unlimited tbb)
-add_dependencies(filter_test tbb)
-add_dependencies(single_sos_unlimited tbb)
-add_dependencies(varying_inter_block tbb)
-add_dependencies(filter tbb)
-
-target_link_libraries(cascaded_sos PRIVATE ${EXTERNAL_INSTALL_LOCATION}/src/tbb/build/*/libtbb.so)
-target_link_libraries(cascaded_sos_unlimited PRIVATE ${EXTERNAL_INSTALL_LOCATION}/src/tbb/build/*/libtbb.so)
-target_link_libraries(filter_test PRIVATE ${EXTERNAL_INSTALL_LOCATION}/src/tbb/build/*/libtbb.so)
-target_link_libraries(single_sos_unlimited PRIVATE ${EXTERNAL_INSTALL_LOCATION}/src/tbb/build/*/libtbb.so)
-target_link_libraries(varying_inter_block PRIVATE ${EXTERNAL_INSTALL_LOCATION}/src/tbb/build/*/libtbb.so)
-target_link_libraries(filter PRIVATE ${EXTERNAL_INSTALL_LOCATION}/src/tbb/build/*/libtbb.so)
+# Link TBB to executables
+target_link_libraries(cascaded_sos PRIVATE TBB::tbb)
+target_link_libraries(cascaded_sos_unlimited PRIVATE TBB::tbb)
+target_link_libraries(filter_test PRIVATE TBB::tbb)
+target_link_libraries(single_sos_unlimited PRIVATE TBB::tbb)
+target_link_libraries(varying_inter_block PRIVATE TBB::tbb)
+target_link_libraries(filter PRIVATE TBB::tbb)
 
 # Tests
 add_test(NAME option COMMAND option)
