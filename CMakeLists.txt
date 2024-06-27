@@ -29,7 +29,18 @@ ExternalProject_Add(vcl
     INSTALL_COMMAND ""
 )
 
+# Add an old release of oneTBB
+ExternalProject_Add(oneTBB
+    GIT_REPOSITORY https://github.com/oneapi-src/oneTBB.git
+    PREFIX ${EXTERNAL_INSTALL_LOCATION}/oneTBB
+    GIT_TAG 2019  # Tag for the 2019 release
+    CONFIGURE_COMMAND ""
+    BUILD_COMMAND ""
+    INSTALL_COMMAND ""
+)
+
 include_directories(${EXTERNAL_INSTALL_LOCATION}/src/vcl
+    ${EXTERNAL_INSTALL_LOCATION}/oneTBB/src/oneTBB/include
     ${PROJECT_SOURCE_DIR}/include
     ${PROJECT_SOURCE_DIR}/src
 )
