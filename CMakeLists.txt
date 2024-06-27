@@ -29,14 +29,19 @@ ExternalProject_Add(vcl
     UPDATE_DISCONNECTED 1
 )
 
-# Find TBB
-find_package(TBB REQUIRED)
+# Include TBB directories
+set(TBB_DIR ${CMAKE_SOURCE_DIR}/external/oneTBB-2019)
 
 include_directories(
     ${EXTERNAL_INSTALL_LOCATION}/vcl/src/vcl
-    ${TBB_INCLUDE_DIRS}
+    ${TBB_DIR}/include
     ${PROJECT_SOURCE_DIR}/include
     ${PROJECT_SOURCE_DIR}/src
+)
+
+# Link TBB libraries
+link_directories(
+    ${TBB_DIR}/build/linux_intel64_gcc_cc9_libc2.28_kernel4.15.0_release
 )
 
 set(CMAKE_CXX_COMPILER "clang++")
@@ -58,12 +63,12 @@ add_dependencies(single_sos_unlimited vcl)
 add_dependencies(varying_inter_block vcl)
 add_dependencies(filter vcl)
 
-target_link_libraries(cascaded_sos PRIVATE TBB::tbb)
-target_link_libraries(cascaded_sos_unlimited PRIVATE TBB::tbb)
-target_link_libraries(filter_test PRIVATE TBB::tbb)
-target_link_libraries(single_sos_unlimited PRIVATE TBB::tbb)
-target_link_libraries(varying_inter_block PRIVATE TBB::tbb)
-target_link_libraries(filter PRIVATE TBB::tbb)
+target_link_libraries(cascaded_sos PRIVATE ${TBB_DIR}/build/linux_intel64_gcc_cc9_libc2.28_kernel4.15.0_release/libtbb.so)
+target_link_libraries(cascaded_sos_unlimited PRIVATE ${TBB_DIR}/build/linux_intel64_gcc_cc9_libc2.28_kernel4.15.0_release/libtbb.so)
+target_link_libraries(filter_test PRIVATE ${TBB_DIR}/build/linux_intel64_gcc_cc9_libc2.28_kernel4.15.0_release/libtbb.so)
+target_link_libraries(single_sos_unlimited PRIVATE ${TBB_DIR}/build/linux_intel64_gcc_cc9_libc2.28_kernel4.15.0_release/libtbb.so)
+target_link_libraries(varying_inter_block PRIVATE ${TBB_DIR}/build/linux_intel64_gcc_cc9_libc2.28_kernel4.15.0_release/libtbb.so)
+target_link_libraries(filter PRIVATE ${TBB_DIR}/build/linux_intel64_gcc_cc9_libc2.28_kernel4.15.0_release/libtbb.so)
 
 # Tests
 add_test(NAME option COMMAND option)
