@@ -5,8 +5,8 @@ This is a C++ header-only library for applying a recursive filter by filtering m
 ## Installation
 Clone the repository 
    ```sh
-   git clone https://github.com/Haotian-RA/recursive-filtering-code.git
-   cd recursive-filtering-code
+   git clone https://github.com/Haotian-RA/multi-core-iir-code.git
+   cd multi-core-iir-code
    ```
 Make and go into a sub-directory
    ```sh
