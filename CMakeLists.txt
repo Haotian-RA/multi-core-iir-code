@@ -36,10 +36,11 @@ include_directories(${EXTERNAL_INSTALL_LOCATION}/src/vcl
 
 set(CMAKE_CXX_COMPILER "clang++")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++20 -I/usr/local/include -march=native -mavx2 -mfma -O3")
-add_executable(option test/option.cpp)
-add_executable(cascaded_option test/cascaded_option.cpp)
-add_executable(series test/series.cpp)
-add_executable(filter_test test/filter.cpp)
+add_executable(cascaded_sos test/cascaded_sos.cpp)
+add_executable(cascaded_sos_unlimited test/cascaded_sos_unlimited.cpp)
+add_executable(filter_test test/filter_test.cpp)
+add_executable(single_sos_unlimited test/single_sos_unlimited.cpp)
+add_executable(varying_inter_block test/varying_inter_block.cpp)
 add_executable(filter example/filter.cpp)
 
 add_test(NAME option COMMAND option)
