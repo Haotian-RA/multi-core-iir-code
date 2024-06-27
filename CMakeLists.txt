@@ -1,4 +1,3 @@
-# Build
 cmake_minimum_required(VERSION 3.12)
 
 project(recursive_filter VERSION 1.0.0 LANGUAGES CXX)
@@ -16,26 +15,38 @@ target_include_directories(
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 )
 
-# Test
+# Add External Projects
 include(ExternalProject)
 
 set(EXTERNAL_INSTALL_LOCATION ${CMAKE_BINARY_DIR}/external)
 
 ExternalProject_Add(vcl
     GIT_REPOSITORY https://github.com/vectorclass/version2.git
-    PREFIX external
+    PREFIX external/vcl
     CONFIGURE_COMMAND ""
     BUILD_COMMAND ""
     INSTALL_COMMAND ""
 )
 
-include_directories(${EXTERNAL_INSTALL_LOCATION}/src/vcl
+ExternalProject_Add(tbb
+    GIT_REPOSITORY https://github.com/oneapi-src/oneTBB.git
+    PREFIX external/tbb
+    CONFIGURE_COMMAND ""
+    BUILD_COMMAND make
+    INSTALL_COMMAND ""
+)
+
+include_directories(
+    ${EXTERNAL_INSTALL_LOCATION}/src/vcl
+    ${EXTERNAL_INSTALL_LOCATION}/src/tbb/include
     ${PROJECT_SOURCE_DIR}/include
     ${PROJECT_SOURCE_DIR}/src
 )
 
 set(CMAKE_CXX_COMPILER "clang++")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++20 -I/usr/local/include -march=native -mavx2 -mfma -O3")
+
+# Add executables
 add_executable(cascaded_sos test/cascaded_sos.cpp)
 add_executable(cascaded_sos_unlimited test/cascaded_sos_unlimited.cpp)
 add_executable(filter_test test/filter_test.cpp)
@@ -43,6 +54,22 @@ add_executable(single_sos_unlimited test/single_sos_unlimited.cpp)
 add_executable(varying_inter_block test/varying_inter_block.cpp)
 add_executable(filter example/filter.cpp)
 
+# Add dependencies and link TBB to executables
+add_dependencies(cascaded_sos tbb)
+add_dependencies(cascaded_sos_unlimited tbb)
+add_dependencies(filter_test tbb)
+add_dependencies(single_sos_unlimited tbb)
+add_dependencies(varying_inter_block tbb)
+add_dependencies(filter tbb)
+
+target_link_libraries(cascaded_sos PRIVATE ${EXTERNAL_INSTALL_LOCATION}/src/tbb/build/*/libtbb.so)
+target_link_libraries(cascaded_sos_unlimited PRIVATE ${EXTERNAL_INSTALL_LOCATION}/src/tbb/build/*/libtbb.so)
+target_link_libraries(filter_test PRIVATE ${EXTERNAL_INSTALL_LOCATION}/src/tbb/build/*/libtbb.so)
+target_link_libraries(single_sos_unlimited PRIVATE ${EXTERNAL_INSTALL_LOCATION}/src/tbb/build/*/libtbb.so)
+target_link_libraries(varying_inter_block PRIVATE ${EXTERNAL_INSTALL_LOCATION}/src/tbb/build/*/libtbb.so)
+target_link_libraries(filter PRIVATE ${EXTERNAL_INSTALL_LOCATION}/src/tbb/build/*/libtbb.so)
+
+# Tests
 add_test(NAME option COMMAND option)
 add_test(NAME cascaded_option COMMAND cascaded_option)
 add_test(NAME series COMMAND series)
@@ -82,4 +109,3 @@ install(FILES "${PROJECT_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
         DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/${PROJECT_NAME}/cmake)
 
 install(DIRECTORY ${PROJECT_SOURCE_DIR}/include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME})
-
