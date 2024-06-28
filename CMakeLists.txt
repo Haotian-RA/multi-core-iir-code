@@ -35,7 +35,7 @@ ExternalProject_Add(oneTBB
     PREFIX ${EXTERNAL_INSTALL_LOCATION}/oneTBB
     GIT_TAG 2019  # Tag for the 2019 release
     CONFIGURE_COMMAND ""
-    BUILD_COMMAND ""
+    BUILD_COMMAND make -C ${EXTERNAL_INSTALL_LOCATION}/oneTBB/src/oneTBB
     INSTALL_COMMAND ""
 )
 
@@ -49,25 +49,31 @@ link_directories(${EXTERNAL_INSTALL_LOCATION}/oneTBB/src/oneTBB/build/)
 
 set(CMAKE_CXX_COMPILER "clang++")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++20 -I/usr/local/include -march=native -mavx2 -mfma -ltbb -w -O3")
-# set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++20 -I/usr/local/include -march=native -mavx2 -mfma -w -O3")
-# set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -ltbb")
-set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-rpath,${EXTERNAL_INSTALL_LOCATION}/oneTBB/src/oneTBB/build/linux_intel64_gcc_cc9_libc2.31_kernel5.4.0_release")
+set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-rpath,${EXTERNAL_INSTALL_LOCATION}/oneTBB/src/oneTBB/build/linux_intel64_gcc_cc10_libc2.31_kernel5.4.0_release")
 
 add_executable(cascaded_sos test/cascaded_sos.cpp)
-# target_link_libraries(cascaded_sos tbb)
-target_link_libraries(cascaded_sos ${EXTERNAL_INSTALL_LOCATION}/oneTBB/src/oneTBB/build/linux_intel64_gcc_cc9_libc2.31_kernel5.4.0_release/libtbb.so)
+target_link_libraries(cascaded_sos ${EXTERNAL_INSTALL_LOCATION}/oneTBB/src/oneTBB/build/linux_intel64_gcc_cc10_libc2.31_kernel5.4.0_release/libtbb.so)
 
-# add_executable(cascaded_sos_unlimited test/cascaded_sos_unlimited.cpp)
-# add_executable(filter_test test/filter_test.cpp)
-# add_executable(single_sos_unlimited test/single_sos_unlimited.cpp)
-# add_executable(varying_inter_block test/varying_inter_block.cpp)
-# add_executable(filter example/filter.cpp)
+add_executable(cascaded_sos_unlimited test/cascaded_sos_unlimited.cpp)
+target_link_libraries(cascaded_sos_unlimited ${EXTERNAL_INSTALL_LOCATION}/oneTBB/src/oneTBB/build/linux_intel64_gcc_cc10_libc2.31_kernel5.4.0_release/libtbb.so)
+
+add_executable(filter_test test/filter_test.cpp)
+target_link_libraries(filter_test ${EXTERNAL_INSTALL_LOCATION}/oneTBB/src/oneTBB/build/linux_intel64_gcc_cc10_libc2.31_kernel5.4.0_release/libtbb.so)
+
+add_executable(single_sos_unlimited test/single_sos_unlimited.cpp)
+target_link_libraries(single_sos_unlimited ${EXTERNAL_INSTALL_LOCATION}/oneTBB/src/oneTBB/build/linux_intel64_gcc_cc10_libc2.31_kernel5.4.0_release/libtbb.so)
+
+add_executable(varying_inter_block test/varying_inter_block.cpp)
+target_link_libraries(varying_inter_block ${EXTERNAL_INSTALL_LOCATION}/oneTBB/src/oneTBB/build/linux_intel64_gcc_cc10_libc2.31_kernel5.4.0_release/libtbb.so)
+
+add_executable(filter example/filter.cpp)
+target_link_libraries(filter ${EXTERNAL_INSTALL_LOCATION}/oneTBB/src/oneTBB/build/linux_intel64_gcc_cc10_libc2.31_kernel5.4.0_release/libtbb.so)
 
 add_test(NAME cascaded_sos COMMAND cascaded_sos)
-# add_test(NAME cascaded_sos_unlimited COMMAND cascaded_sos_unlimited)
-# add_test(NAME filter_test COMMAND filter_test)
-# add_test(NAME single_sos_unlimited COMMAND single_sos_unlimited)
-# add_test(NAME varying_inter_block COMMAND varying_inter_block)
+add_test(NAME cascaded_sos_unlimited COMMAND cascaded_sos_unlimited)
+add_test(NAME filter_test COMMAND filter_test)
+add_test(NAME single_sos_unlimited COMMAND single_sos_unlimited)
+add_test(NAME varying_inter_block COMMAND varying_inter_block)
 
 enable_testing()
 
